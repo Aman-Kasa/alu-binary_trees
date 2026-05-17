@@ -66,4 +66,11 @@ heap_t *array_to_heap(int *array, size_t size);
 
 int heap_extract(heap_t **root);
 
+int heap_extract(heap_t **root);
+
+int heap_extract(heap_t **root);
+int *heap_to_sorted_array(heap_t *heap, size_t *size);
+
+
+
 #endif /* BINARY_TREES_H */
