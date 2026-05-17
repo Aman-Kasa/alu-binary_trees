@@ -1,39 +1,40 @@
 #include "binary_trees.h"
 
 /**
- * absolute_height-Measures actual tree height including the leaf node factor.
- * @tree: Target tree tracking point.
+ * binary_tree_height_b - Measures the height of a binary tree
+ *                        for a balance factor calculation.
+ * @tree: Pointer to the root node of the tree to measure.
  *
- * Return: Pure structural height calculation.
+ * Return: The height of the tree, or 0 if NULL.
  */
-int absolute_height(const binary_tree_t *tree)
+size_t binary_tree_height_b(const binary_tree_t *tree)
 {
-	int left_h, right_h;
+	size_t l = 0, r = 0;
 
 	if (tree == NULL)
 		return (0);
 
-	left_h = absolute_height(tree->left);
-	right_h = absolute_height(tree->right);
+	l = tree->left ? 1 + binary_tree_height_b(tree->left) : 1;
+	r = tree->right ? 1 + binary_tree_height_b(tree->right) : 1;
 
-	return (1 + (left_h > right_h ? left_h : right_h));
+	return ((l > r) ? l : r);
 }
 
 /**
  * binary_tree_balance - Measures the balance factor of a binary tree.
- * @tree: A pointer to the root node of the tree to measure.
+ * @tree: Pointer to the root node of the tree to measure.
  *
- * Return: Balance factor value. If tree is NULL, return 0.
+ * Return: The balance factor, or 0 if tree is NULL.
  */
 int binary_tree_balance(const binary_tree_t *tree)
 {
-	int left_h, right_h;
+	int left_h = 0, right_h = 0;
 
 	if (tree == NULL)
 		return (0);
 
-	left_h = absolute_height(tree->left);
-	right_h = absolute_height(tree->right);
+	left_h = (int)binary_tree_height_b(tree->left);
+	right_h = (int)binary_tree_height_b(tree->right);
 
 	return (left_h - right_h);
 }
