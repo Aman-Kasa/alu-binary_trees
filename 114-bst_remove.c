@@ -14,18 +14,17 @@ bst_t *find_min(bst_t *node)
 }
 
 /**
- * delete_node - Handles the structural cleanup and link adjustments
- *               for a node slated for deletion.
+ * delete_node - Handles unlinking and freeing a node from a BST.
  * @curr: A pointer to the node to delete.
  *
- * Return: A pointer to the child node that replaces the deleted node,
+ * Return: A pointer to the child node replacing the deleted node,
  *         or NULL if the deleted node was a leaf.
  */
 bst_t *delete_node(bst_t *curr)
 {
 	bst_t *succ, *child;
 
-	/* Case 3: Node has two children */
+	/* Case 1: Node has two children */
 	if (curr->left != NULL && curr->right != NULL)
 	{
 		succ = find_min(curr->right);
@@ -34,7 +33,7 @@ bst_t *delete_node(bst_t *curr)
 		return (curr);
 	}
 
-	/* Case 1 & 2: Node has one child or is a leaf */
+	/* Case 2 & 3: Node has one child or is a leaf */
 	child = curr->left ? curr->left : curr->right;
 	if (child != NULL)
 		child->parent = curr->parent;
@@ -48,28 +47,31 @@ bst_t *delete_node(bst_t *curr)
  * @root: A pointer to the root node of the tree where a node will be removed.
  * @value: The value to remove in the tree.
  *
- * Return: A pointer to the new root node of the tree after removing the value.
+ * Return: A pointer to the new root node of the tree after configuration.
  */
 bst_t *bst_remove(bst_t *root, int value)
 {
 	if (root == NULL)
 		return (NULL);
 
-	/* Navigate the tree to find the node to remove */
+	/* Navigate the tree left or right */
 	if (value < root->n)
+	{
 		root->left = bst_remove(root->left, value);
+		if (root->left != NULL)
+			root->left->parent = root;
+	}
 	else if (value > root->n)
+	{
 		root->right = bst_remove(root->right, value);
+		if (root->right != NULL)
+			root->right->parent = root;
+	}
 	else
 	{
-		/* Node found: update parent's child reference before freeing */
-		if (root->parent == NULL)
-			return (delete_node(root));
-
-		if (root->parent->left == root)
-			root->parent->left = delete_node(root);
-		else
-			root->parent->right = delete_node(root);
+		/* Node found: handle structural replacement safely */
+		return (delete_node(root));
 	}
+
 	return (root);
 }
