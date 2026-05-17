@@ -18,15 +18,12 @@ static avl_t *create_avl_from_segment(int *array, int start, int end,
 	if (start > end)
 		return (NULL);
 
-	/* Find the middle element to ensure balanced height partitions */
 	mid = start + (end - start) / 2;
 
-	/* Create the node using the parent link passed down from above */
 	root = binary_tree_node(parent, array[mid]);
 	if (root == NULL)
 		return (NULL);
 
-	/* Recursively build subtrees using the local root as the next parent */
 	root->left = create_avl_from_segment(array, start, mid - 1, root);
 	root->right = create_avl_from_segment(array, mid + 1, end, root);
 
