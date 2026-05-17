@@ -28,7 +28,7 @@ static int is_heap_valid(const binary_tree_t *tree, size_t index,
 	if (tree == NULL)
 		return (1);
 
-	/* If a node's index matches or exceeds total count, a structural gap exists */
+/* If a node's index matches or exceeds totalcount,a structural gapexists */
 	if (index >= node_count)
 		return (0);
 
