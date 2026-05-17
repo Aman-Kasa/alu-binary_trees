@@ -15,7 +15,7 @@ static size_t count_nodes(const binary_tree_t *tree)
 }
 
 /**
- * is_heap_valid -Validatesthecomplete tree structure andmax heap valuerules.
+ * is_heap_valid - Validates the complete tree structure and max heap rules.
  * @tree: Pointer to the current node being evaluated.
  * @index: Index position assigned to the current node.
  * @node_count: Total node count calculated from the tree root.
@@ -28,19 +28,19 @@ static int is_heap_valid(const binary_tree_t *tree, size_t index,
 	if (tree == NULL)
 		return (1);
 
-	/* If an index matches or exceeds total count, a structural gap exists */
+	/* If a node's index matches or exceeds total count, a structural gap exists */
 	if (index >= node_count)
 		return (0);
 
-	/* Validate left child value bounds */
+	/* Validate left child value bounds (Parent >= Left Child) */
 	if (tree->left && tree->left->n > tree->n)
 		return (0);
 
-	/* Validate right child value bounds */
+	/* Validate right child value bounds (Parent >= Right Child) */
 	if (tree->right && tree->right->n > tree->n)
 		return (0);
 
-	/* Recursively evaluate left (2i + 1) and right (2i + 2) child structures */
+	/* Recursively evaluate left (2i + 1) and right (2i + 2) subtrees */
 	return (is_heap_valid(tree->left, (2 * index) + 1, node_count) &&
 		is_heap_valid(tree->right, (2 * index) + 2, node_count));
 }

@@ -1,7 +1,7 @@
 #include "binary_trees.h"
 
 /**
- * create_avl_from_segment - Recursively builds an AVL tree from an array segment.
+ * create_avl_from_segment-Recursively builds anAVL tree from anarray segment.
  * @array: Pointer to the first element of the original array.
  * @start: The starting index of the current array segment.
  * @end: The ending index of the current array segment.
