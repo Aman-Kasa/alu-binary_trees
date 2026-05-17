@@ -1,7 +1,7 @@
 #include "binary_trees.h"
 
 /**
- * absolute_height - Measures actual tree height including the leaf node factor.
+ * absolute_height-Measures actual tree height including the leaf node factor.
  * @tree: Target tree tracking point.
  *
  * Return: Pure structural height calculation.

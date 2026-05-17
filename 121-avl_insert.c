@@ -1,10 +1,10 @@
 #include "binary_trees.h"
 
 /**
- * node_height - Structural height evaluator logic.
- * @tree: Targeted node.
+ * node_height - Measures the height of a binary tree node.
+ * @tree: Pointer to the node to measure.
  *
- * Return: Absolute height score metrics.
+ * Return: Height of the node, 0 if NULL.
  */
 size_t node_height(const binary_tree_t *tree)
 {
@@ -12,64 +12,53 @@ size_t node_height(const binary_tree_t *tree)
 
 	if (tree == NULL)
 		return (0);
+
 	lh = tree->left ? 1 + node_height(tree->left) : 0;
 	rh = tree->right ? 1 + node_height(tree->right) : 0;
 	return (lh > rh ? lh : rh);
 }
 
 /**
- * node_balance - Evaluates node balance factor metrics.
- * @tree: Node target check.
+ * avl_insert_recursive - Recursively inserts a value and rebalances the tree.
+ * @tree: Double pointer to the current root of the subtree.
+ * @parent: Pointer to the parent node.
+ * @new_node: Double pointer to store the newly created node.
+ * @value: Value to store in the new node.
  *
- * Return: Balance integer calculation.
+ * Return: Pointer to the new root of the subtree after rebalancing.
  */
-int node_balance(const binary_tree_t *tree)
+avl_t *avl_insert_recursive(avl_t **tree, avl_t *parent,
+			    avl_t **new_node, int value)
 {
-	int lh, rh;
-
-	if (tree == NULL)
-		return (0);
-	lh = tree->left ? (int)node_height(tree->left) + 1 : 0;
-	rh = tree->right ? (int)node_height(tree->right) + 1 : 0;
-	return (lh - rh);
-}
-
-/**
- * recurse_avl_insert - Tail-recursive tracking tool matching insertions.
- * @tree: Root node double pointer reference tracking tool.
- * @parent: Tracking pointer parent data link assignments.
- * @new_n: New node memory allocation tracker storage.
- * @val: Structural payload content score.
- *
- * Return: Pointer to sub-tree configurations.
- */
-avl_t *recurse_avl_insert(avl_t **tree, avl_t *parent, avl_t **new_n, int val)
-{
-	int b_factor;
+	int balance;
 
 	if (*tree == NULL)
 	{
-		*new_n = binary_tree_node(parent, val);
-		return (*new_n);
+		*new_node = binary_tree_node(parent, value);
+		return (*new_node);
 	}
-	if (val < (*tree)->n)
-		(*tree)->left = recurse_avl_insert(&((*tree)->left), *tree, new_n, val);
-	else if (val > (*tree)->n)
-		(*tree)->right = recurse_avl_insert(&((*tree)->right), *tree, new_n, val);
+	if (value < (*tree)->n)
+		(*tree)->left = avl_insert_recursive(&((*tree)->left), *tree,
+						     new_node, value);
+	else if (value > (*tree)->n)
+		(*tree)->right = avl_insert_recursive(&((*tree)->right), *tree,
+						      new_node, value);
 	else
 		return (*tree);
 
-	b_factor = node_balance(*tree);
-	if (b_factor > 1 && val < (*tree)->left->n)
+	balance = (int)node_height((*tree)->left) - (int)node_height((*tree)->right);
+	if (balance > 1 && value < (*tree)->left->n)
 		return (binary_tree_rotate_right(*tree));
-	if (b_factor < -1 && val > (*tree)->right->n)
+
+	if (balance < -1 && value > (*tree)->right->n)
 		return (binary_tree_rotate_left(*tree));
-	if (b_factor > 1 && val > (*tree)->left->n)
+
+	if (balance > 1 && value > (*tree)->left->n)
 	{
 		(*tree)->left = binary_tree_rotate_left((*tree)->left);
 		return (binary_tree_rotate_right(*tree));
 	}
-	if (b_factor < -1 && val < (*tree)->right->n)
+	if (balance < -1 && value < (*tree)->right->n)
 	{
 		(*tree)->right = binary_tree_rotate_right((*tree)->right);
 		return (binary_tree_rotate_left(*tree));
@@ -79,7 +68,7 @@ avl_t *recurse_avl_insert(avl_t **tree, avl_t *parent, avl_t **new_n, int val)
 
 /**
  * avl_insert - Inserts a value in an AVL Tree.
- * @tree: A double pointer to the root node of the AVL tree.
+ * @tree: A double pointer to the root node of the AVL tree for insertion.
  * @value: The value to store in the node to be inserted.
  *
  * Return: A pointer to the created node, or NULL on failure.
@@ -90,11 +79,13 @@ avl_t *avl_insert(avl_t **tree, int value)
 
 	if (tree == NULL)
 		return (NULL);
+
 	if (*tree == NULL)
 	{
 		*tree = binary_tree_node(NULL, value);
 		return (*tree);
 	}
-	recurse_avl_insert(tree, NULL, &new_node, value);
+
+	*tree = avl_insert_recursive(tree, NULL, &new_node, value);
 	return (new_node);
 }

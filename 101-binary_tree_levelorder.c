@@ -40,7 +40,7 @@ void execute_level(const binary_tree_t *tree, size_t level, void (*func)(int))
 }
 
 /**
- * binary_tree_levelorder - Traverses a binary tree using level-order traversal.
+ * binary_tree_levelorder-Traverses a binary tree using level-ordertraversal.
  * @tree: A pointer to the root node of the tree to traverse.
  * @func: A pointer to a function to call for each node.
  */
